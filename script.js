@@ -23,11 +23,23 @@ const value= [
                 ["PENNY", 0.01]
             ];
 
+const updateDrawerDisplay=()=> {
+  const drawerDiv = document.getElementById("cash-drawer-display");
+  drawerDiv.innerHTML = "<p><strong>Change in drawer:</strong></p>";
+
+  cid.forEach(item => {
+    drawerDiv.innerHTML += `<p>${item[0]}: $${item[1].toFixed(2)}</p>`;
+  });
+}
+
+
 
 
 const changeDue = document.getElementById("change-due");
+
 document.getElementById('purchase-btn').addEventListener('click', ()=>{
      const cash = parseFloat(document.getElementById('cash').value);
+     
      
 
      const calculateChange = (cash)=>{
@@ -84,6 +96,8 @@ changeArr.forEach(c => {
 
   changeDue.textContent = output;
 }
+cid = [...reverseCid].reverse();
+          updateDrawerDisplay();
 
 }
           
@@ -98,9 +112,5 @@ changeArr.forEach(c => {
 
      }
      calculateChange(cash)
-
-
-
-
-
-})
+});
+updateDrawerDisplay()
