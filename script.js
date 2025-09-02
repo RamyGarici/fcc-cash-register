@@ -24,50 +24,83 @@ const value= [
             ];
 
 
-document.getElementById('purchase-btn').addEventListener('click', function() {
 
-    const cash = parseFloat(document.getElementById('cash').value);});
-    
+const changeDue = document.getElementById("change-due");
+document.getElementById('purchase-btn').addEventListener('click', ()=>{
+     const cash = parseFloat(document.getElementById('cash').value);
+     
 
- function calculateChange(price, cash, cid) {
-        let changeDue = parseFloat((cash - price).toFixed(2)); 
-        if (changeDue < 0) {
-           
+     const calculateChange = (cash)=>{
+const reverseCid = [...cid].reverse()
+        if(cash<price){
             alert("Customer does not have enough money to purchase the item");
-            return {status: "INSUFFICIENT_FUNDS", change: [], remainingCid: cid};
-        } else if (changeDue === 0) {
-            
-            return {status: "No change due - customer paid with exact cash", change: [], remainingCid: cid};
-        } else {
-            let totalCid = parseFloat(cid.reduce((ActiveXObject,curr)=>
-                acc + curr[1], 0).toFixed(2));
-            
-               cid = cid.reverse();
-            for (let i = 0; i < denominations.length; i++) {
-                let coinName = value[i][0];
-                let coinValue = value[i][1];
-                let coinAvailable = cid[i][1];
-                let coinAmount = 0;}
-            
-            while(changeDue>coinValue && coinAvailable>0){
-                changeDue-=coinValue;
-                coinAvailable-=coinValue;
-                changeDue = parseFloat(changeDue.toFixed(2));
-                coinAmount+=coinValue
+
+        }
+        else if(cash===price){
+            changeDue.textContent = "No change due - customer paid with exact cash";
 
 
-
+        }
+        else{
+            let amount=0
+            let change = cash-price;
+            const toGiveBack=change;
+            let changeArr = []
+            if(change>cid.reduce((acc, curr) => acc + curr[1], 0)){
+                changeDue.textContent = "Status: INSUFFICIENT_FUNDS"
             }
-            
+            else if(change<=cid.reduce((acc, curr) => acc + curr[1], 0)){
+                for(let i=0;i<reverseCid.length;i++){
+                    amount=0
+                    while(change>=value[i][1] && reverseCid[i][1]>0){
+                        amount+=value[i][1];
+                        reverseCid[i][1]-=value[i][1];
+                        change-=value[i][1]
+                        change=Number(change.toFixed(2))
+                    }
+                    if(amount>0){
+                   changeArr.push([value[i][0], amount]);
+}
+                }
+                if(Number(toGiveBack.toFixed(2)) !=Number(changeArr.reduce((acc, curr) => acc + curr[1], 0).toFixed(2))){
+                 changeDue.textContent ="Status: INSUFFICIENT_FUNDS"
+
+                }
+                else{
+                    let totalLeft = Number(reverseCid.reduce((acc, curr) => acc + curr[1], 0).toFixed(2));
+                    console.log(totalLeft)
+
+  if (totalLeft === 0) { let output = "Status: CLOSED";
+    changeArr.forEach(c => {
+      output += ` ${c[0]}: $${c[1].toFixed(2)}`;
+    });
+    changeDue.textContent = output;}
+
+else{
+              let output = "Status: OPEN";
+changeArr.forEach(c => {
+  output += ` ${c[0]}: $${c[1].toFixed(2)}`;
+});
+
+  changeDue.textContent = output;
+}
+
+}
+          
             
             }
+    
+           
+
+            
+
+        }
+
+     }
+     calculateChange(cash)
 
 
-    
-    
-    
-    
-    
-    
-    
-    }
+
+
+
+})
